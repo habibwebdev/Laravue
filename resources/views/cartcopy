@@ -1,0 +1,53 @@
+@if(Cart::instance('saveForLater')->count() > 0)
+
+                        <div class="total-items-section mb-4 mt-4">
+                            <h5>{{Cart::instance('saveForLater')->count()}} item(s) <span class="text-capitalize">saved for later.</span></h5>
+                        </div>
+                        @foreach(Cart::instance('saveForLater')->content() as $item)
+                        <div class="cart-product-section border border-right-0 border-left-0">
+
+                            <div class="row">
+                                <div class="col-sm-2 p-img">
+                                    <a href="{{route('shop.show', $item->model->slug)}}"><img src="{{asset('img/products/'.$item->model->slug.'.png')}}" alt="item" class="img-fluid my-4"></a>
+                                </div>
+                                <div class="col-sm-4 p-specs">
+                                    <a href="{{route('shop.show', $item->model->slug)}}" class="text-dark">
+                                        <p class="m-0 pt-4">{{$item->model->name}}</p>
+                                    </a>
+                                    <p class="text-muted m-0">{{$item->model->details}}</p>
+                                </div>
+                                <div class="col-sm-2 p-action pt-2">
+                                    {{-- <a href="remove.html" class="text-secondary"><small class="d-block pt-4">Remove</small></a> --}}
+                                    <form action="{{route('saveForLater.destroy', $item->rowId)}}" method="POST">
+                                        @csrf @method('DELETE')
+                                        <button type="submit" class="btn btn-light p-0"><small>Remove</small></button>
+                                    </form>
+                                    {{-- <a href="{{url('cartsaved')}}" class="text-secondary"><small class="d-block">Save for later</small></a>            --}}
+                                    <form action="{{route('saveForLater.moveToCart', $item->rowId)}}" method="POST">
+                                        @csrf
+                                        <button type="submit" class="btn btn-light p-0"><small>Move to Cart</small></button>
+                                    </form>
+                                </div>
+                                <div class="col-sm-2 p-quantity pt-3">
+                                    <form action="">
+                                        <select class="form-control mt-3">
+                                                                        <option selected>1</option>
+                                                                        <option value="2">2</option>
+                                                                        <option value="3">3</option>
+                                                                        <option value="4">4</option>
+                                                                        <option value="5">5</option>
+                                                                    </select>
+                                    </form>
+                                </div>
+                                <div class="col-sm-2 p-price pt-3">
+                                    <p class="pt-4">{{$item->model->presentPrice()}}</p>
+                                </div>
+                            </div>
+
+                        </div>
+                        @endforeach
+
+
+                        @else
+                            <h5>You have no Item(s) saved for later!</h5>
+                        @endif
